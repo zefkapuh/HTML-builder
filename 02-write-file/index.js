@@ -17,7 +17,7 @@ stdin.pipe(output);
 stdout.write("Hello! Write whatever you want, please:\n");
 
 rl.on('line', (exit) => {
-    if (exit === 'exit') {
+    if (exit === 'exit' || exit === 'Exit' || exit === 'EXIT') {
         rl.close();
     }
     });
