@@ -15,15 +15,15 @@ fs.readdir(
           (err, stats) => {
             if (err) {
               console.log(err);
-            } 
+            }
             if (stats.isFile()) {
               let fileSize = stats.size;
-              let fileExtension = (path.extname(file)).slice(1);
-              console.log(`${file.name} - ${fileExtension} - ${fileSize}bytes`);
-        }
+              console.log(`${file.name} - ${fileSize}bytes`);
+            }
           }
         );
       });
     }
   }
 );
+
