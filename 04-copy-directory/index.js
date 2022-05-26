@@ -1,31 +1,41 @@
 const fs = require('fs');
-const fsPromises = fs.promises;
 const path = require('path');
 
-fs.mkdir(path.join(__dirname, 'files-copy'), {recursive: true}, (err) => {
-  if (err) throw err;
-  console.log('Папка была создана');
-});
-
-fs.readdir(
-  path.join(__dirname, 'files'),
-  { withFileTypes: true },
-  (err, files) => {
-    console.log('\nCurrent directory filenames:');
-    if (err) {
-      console.log(err);
-    } else {
-      files.forEach((file) => {
-        console.log(file);
-        fs.copyFile(
-          path.join(__dirname, 'files', file.name),
-          path.join(__dirname, 'files-copy', file.name),
-          (err) => {
-            if (err) throw err;
-            console.log('Files Copied');
-          }
-        );
+fs.access(path.join(__dirname, 'files-copy'),
+  (e) => {
+  if (e) {
+    fs.mkdir(path.join(__dirname, 'files-copy'),
+      (err) => {
+        console.log(err);
       });
-    }
+    fs.readdir(path.join(__dirname, 'files'),
+      (err, files) => {
+        files.forEach(file => {
+          fs.copyFile(path.join(__dirname, 'files', file),
+            path.join(__dirname, 'files-copy', file),
+            (err) => {
+              if (err) console.log(err);
+            });
+        });
+      });
+  } else {
+    fs.readdir(path.join(__dirname, 'files-copy'),
+      (err, files) => {
+        files.forEach(file => {
+          fs.unlink(path.join(__dirname, 'files-copy', file),
+            (err) => {
+              if (err) console.log(err);
+            });
+        });
+      });
+    fs.readdir(path.join(__dirname, 'files'),
+      (err, files) => {
+        files.forEach(file => {
+          fs.copyFile(path.join(__dirname, 'files', file), path.join(__dirname, 'files-copy', file),
+            (err) => {
+              if (err) console.log(err);
+            });
+        });
+      });
   }
-);
+});
